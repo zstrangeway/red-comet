@@ -1,0 +1,22 @@
+{
+  "name": "red-comet",
+  "version": "1.0.0",
+  "description": "Website for Red Comet Creations",
+  "main": "index.js",
+  "devDependencies": {
+    "lerna": "^3.22.1",
+    "typescript": "^4.0.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zstrangeway/red-comet.git"
+  },
+  "author": "Zachary Strangeway",
+  "bugs": {
+    "url": "https://github.com/zstrangeway/red-comet/issues"
+  },
+  "homepage": "https://github.com/zstrangeway/red-comet#readme"
+}
