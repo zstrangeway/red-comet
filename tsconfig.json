@@ -1,13 +1,10 @@
 {
   "extends": "./tsconfig.base.json",
-
   "compilerOptions": {
-    "baseUrl": "./packages",
+    "baseUrl": "./",
     "paths": {
-      "@red-comet/common": ["common"],
-      "@red-comet/contact": ["contact"],
-      "@red-comet/models": ["models"],
-      "@red-comet/quotes": ["quotes"],
+      "/opt/*": ["./packages/*"],
+      "@red-comet/*": ["./packages/*"]
     }
   }
 }

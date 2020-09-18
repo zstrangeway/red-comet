@@ -4,7 +4,7 @@
   "description": "Package for functionality used by multiple packages",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compile": "tsc"
   },
   "keywords": [],
   "author": "Zachary Strangeway",
