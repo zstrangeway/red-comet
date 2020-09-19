@@ -44,7 +44,7 @@ export default class ContactService {
     event: APIGatewayProxyEvent
   ): Promise<APIGatewayProxyResult> => {
     
-    if (!event.pathParameters.id)
+    if (!event.pathParameters?.id)
       return new ErrorResponse(400, "Missing User ID")
 
     const id = event.pathParameters.id
@@ -118,18 +118,10 @@ export default class ContactService {
 
     event.Records.forEach(async (record) => {
       if (record.eventName === "INSERT") {
-        const email = record.dynamodb.NewImage.email.S
-          ? `${record.dynamodb.NewImage.email.S}`
-          : "_blank"
-        const name = record.dynamodb.NewImage.name.S
-          ? `${record.dynamodb.NewImage.name.S}`
-          : "_blank"
-        const subject = record.dynamodb.NewImage.subject.S
-          ? `${record.dynamodb.NewImage.subject.S}`
-          : "_blank"
-        const message = record.dynamodb.NewImage.message.S
-          ? `${record.dynamodb.NewImage.message.S}`
-          : "_blank"
+        const email = record.dynamodb?.NewImage?.email.S ?? "_blank"
+        const name = record.dynamodb?.NewImage?.name.S ?? "_blank"
+        const subject = record.dynamodb?.NewImage?.subject.S ?? "_blank"
+        const message = record.dynamodb?.NewImage?.message.S ?? "_blank"
 
         const emailSubject = `New message from Red Comet website: ${subject}`
         const emailMessage = `Name: ${name}

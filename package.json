@@ -4,7 +4,8 @@
   "description": "Website for Red Comet Creations",
   "main": "index.js",
   "scripts": {
-    "compile": "lerna run compile"
+    "compile": "lerna run compile",
+    "deploy": "sh deploy.sh"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,8 @@
     "aws-sdk": "^2.755.0"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.62",
+    "@types/aws-sdk": "^2.7.0",
     "lerna": "^3.22.1",
     "typescript": "^4.0.2"
   }
