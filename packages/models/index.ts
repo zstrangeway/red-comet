@@ -1,2 +1,2 @@
-export * from "./lib/Response"
-export * from "./lib/Contact"
+export * from "./lib/Response";
+export * from "./lib/Contact";

@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "compile": "lerna run compile",
-    "deploy": "sh deploy.sh"
+    "deploy": "sh deploy.sh",
+    "lint": "eslint . --ext .ts packages",
+    "lint:fix": "eslint . --ext .ts packages --fix"
   },
   "repository": {
     "type": "git",
@@ -23,7 +25,13 @@
   "devDependencies": {
     "@types/aws-lambda": "^8.10.62",
     "@types/aws-sdk": "^2.7.0",
+    "@typescript-eslint/eslint-plugin": "^4.1.1",
+    "@typescript-eslint/parser": "^4.1.1",
+    "eslint": "^7.9.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
     "lerna": "^3.22.1",
+    "prettier": "^2.1.2",
     "typescript": "^4.0.2"
   }
 }

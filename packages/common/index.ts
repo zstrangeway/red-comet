@@ -1,1 +1,1 @@
-export * from "./lib/checkParams"
+export * from "./lib/checkParams";
