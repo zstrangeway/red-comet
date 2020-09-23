@@ -112,21 +112,12 @@ Resources:
         Environment: !Ref Environment
         Service: Contact
 
-  CommonLayer:
+  SharedLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
       LayerName: !Sub Common-Layer-${Environment}
       Description: Dependencies for Contact functions
-      ContentUri: dist/layers/common/nodejs
-      CompatibleRuntimes:
-        - nodejs12.x
-
-  ModelsLayer:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: !Sub Models-Layer-${Environment}
-      Description: Dependencies for Contact functions
-      ContentUri: dist/layers/models/nodejs
+      ContentUri: dist/layers/nodejs
       CompatibleRuntimes:
         - nodejs12.x
 
@@ -141,8 +132,7 @@ Resources:
       Runtime: nodejs12.x
       CodeUri: dist/contact 
       Layers:
-        - !Ref CommonLayer
-        - !Ref ModelsLayer
+        - !Ref SharedLayer
       MemorySize: 128 
       Timeout: 30
       Policies:
@@ -174,8 +164,7 @@ Resources:
       Runtime: nodejs12.x
       CodeUri: dist/contact
       Layers:
-        - !Ref CommonLayer
-        - !Ref ModelsLayer
+        - !Ref SharedLayer
       MemorySize: 128 
       Timeout: 30
       Policies:
@@ -206,8 +195,7 @@ Resources:
       Runtime: nodejs12.x
       CodeUri: dist/contact
       Layers:
-        - !Ref CommonLayer
-        - !Ref ModelsLayer
+        - !Ref SharedLayer
       MemorySize: 128 
       Timeout: 30
       Policies:
@@ -236,8 +224,7 @@ Resources:
       Runtime: nodejs12.x
       CodeUri: dist/contact
       Layers:
-        - !Ref CommonLayer
-        - !Ref ModelsLayer
+        - !Ref SharedLayer
       MemorySize: 128 
       Timeout: 30
       Policies:
@@ -329,8 +316,7 @@ Resources:
       Runtime: nodejs12.x
       CodeUri: dist/quote
       Layers:
-        - !Ref CommonLayer
-        - !Ref ModelsLayer
+        - !Ref SharedLayer
       MemorySize: 128 
       Timeout: 30
       Policies:
@@ -361,8 +347,7 @@ Resources:
       Runtime: nodejs12.x
       CodeUri: dist/quote
       Layers:
-        - !Ref CommonLayer
-        - !Ref ModelsLayer
+        - !Ref SharedLayer
       MemorySize: 128 
       Timeout: 30
       Policies:
@@ -393,8 +378,7 @@ Resources:
       Runtime: nodejs12.x
       CodeUri: dist/quote
       Layers:
-        - !Ref CommonLayer
-        - !Ref ModelsLayer
+        - !Ref SharedLayer
       MemorySize: 128 
       Timeout: 30
       Policies:
