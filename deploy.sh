@@ -21,7 +21,7 @@ aws s3api put-bucket-tagging --bucket $BUCKET --tagging "TagSet=[{Key=environmen
 
 # compile back end
 rm -rf ./dist
-npm run compile
+npm run build
 
 # generate next stage yml file
 sam package \

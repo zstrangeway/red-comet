@@ -4,7 +4,7 @@
   "description": "Website for Red Comet Creations",
   "main": "index.js",
   "scripts": {
-    "compile": "lerna run compile",
+    "build": "lerna run build",
     "deploy": "sh deploy.sh",
     "lint": "eslint . --ext .ts packages",
     "lint:fix": "eslint . --ext .ts packages --fix",

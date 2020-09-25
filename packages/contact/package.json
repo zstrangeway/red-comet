@@ -4,7 +4,7 @@
   "description": "Service for handling contact form submissions",
   "main": "index.js",
   "scripts": {
-    "compile": "tsc"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "Zachary Strangeway",
