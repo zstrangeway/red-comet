@@ -1,3 +1,5 @@
+// This tsconfig is used as a base config for lambda packages
+
 {
   "compilerOptions": {
     "module": "commonjs",

@@ -1,3 +1,4 @@
+// This config is not used for compilation, it is used to provide information to eslint
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
