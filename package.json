@@ -8,7 +8,7 @@
     "deploy": "sh deploy.sh",
     "lint": "eslint . --ext .ts packages",
     "lint:fix": "eslint . --ext .ts packages --fix",
-    "dev": "lerna run dev"
+    "dev": "lerna run dev & sh local.sh"
   },
   "repository": {
     "type": "git",
