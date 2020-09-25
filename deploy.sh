@@ -37,4 +37,5 @@ sam deploy \
     --parameter-overrides Environment=$STAGE
 
 # deploy web-app
-# (cd front-end/web-app && npm run generate && npm run deploy --stage=$STAGE)
+aws s3 sync ./dist/frontend s3://red-comet-webapp-$STAGE
+aws s3 sync ./dist/admin s3://red-comet-webadmin-$STAGE
