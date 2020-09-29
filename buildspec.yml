@@ -1,0 +1,32 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 12
+
+  pre_build:
+    commands:
+      - npm run install-dependencies
+
+  build:
+    commands:
+      - make build STAGE=$STAGE
+
+artifacts:
+  secondary-artifacts:
+    BuildArtifact:
+      files:
+        - '**/*'
+      base-directory: $CODEBUILD_SRC_DIR/dist
+      discard-paths: no
+    FrontEndArtifact:
+      files:
+        - '**/*'
+      base-directory: $CODEBUILD_SRC_DIR/dist/frontend
+      discard-paths: no
+    AdminArtifact:
+      files:
+        - '**/*'
+      base-directory: $CODEBUILD_SRC_DIR/dist/admin
+      discard-paths: no

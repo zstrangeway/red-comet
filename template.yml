@@ -7,35 +7,35 @@ Parameters:
 ###############################################################################
 
   Environment:
-    Description: Enter deployment environment (DEV, PROD)
+    Description: Enter deployment environment (dev, prod)
     Type: String
     AllowedValues: 
       - prod
       - dev
-
-###############################################################################
-Mappings:
-###############################################################################
-
-  EnvironmentMap: 
-    prod: 
-      HostedZone: redcometcrafts.com
-      ApiDomainName: api.redcometcrafts.com
-      FrontendDomainName: redcometcrafts.com
-      FrontendRootBucketName: prod-red-comet-frontend
-      FrontendLogBucketName: prod-red-comet-frontend-logs
-      AdminDomainName: admin.redcometcrafts.com
-      AdminRootBucketName: prod-red-comet-admin
-      AdminLogBucketName: prod-red-comet-admin-logs
-    dev: 
-      HostedZone: redcometcrafts.com
-      ApiDomainName: dev-api.redcometcrafts.com
-      FrontendDomainName: dev.redcometcrafts.com
-      FrontendRootBucketName: dev-red-comet-frontend
-      FrontendLogBucketName: dev-red-comet-frontend-logs
-      AdminDomainName: dev-admin.redcometcrafts.com
-      AdminRootBucketName: dev-red-comet-admin
-      AdminLogBucketName: dev-red-comet-admin-logs
+  HostedZone:
+    Description: Route53 hosted zone
+    Type: String
+  ApiDomainName:
+    Description: Domain of API
+    Type: String
+  FrontendDomainName:
+    Description: Domain of frontend web app
+    Type: String
+  FrontendRootBucketName:
+    Description: S3 bucket for frontend web app
+    Type: String
+  FrontendLogBucketName:
+    Description: S3 bucket for frontend web app logs
+    Type: String
+  AdminDomainName:
+    Description: Domain of admin web app
+    Type: String
+  AdminRootBucketName:
+    Description: S3 bucket for admin web app
+    Type: String
+  AdminLogBucketName:
+    Description: S3 bucket for admin web app logs
+    Type: String
 
 ###############################################################################
 Resources:
@@ -50,10 +50,10 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
-        HostedZone: !FindInMap [EnvironmentMap, !Ref Environment, HostedZone]
-        DomainName: !FindInMap [EnvironmentMap, !Ref Environment, FrontendDomainName]
-        RootBucketName: !FindInMap [EnvironmentMap, !Ref Environment, FrontendRootBucketName]
-        LogBucketName: !FindInMap [EnvironmentMap, !Ref Environment, FrontendLogBucketName]
+        HostedZone: !Ref HostedZone
+        DomainName: !Ref FrontendDomainName
+        RootBucketName: !Ref FrontendRootBucketName
+        LogBucketName: !Ref FrontendLogBucketName
         Environment: !Ref Environment
         Service: Frontend
       TemplateURL: templates/static-site.template.yml
@@ -72,10 +72,10 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
-        HostedZone: !FindInMap [EnvironmentMap, !Ref Environment, HostedZone]
-        DomainName: !FindInMap [EnvironmentMap, !Ref Environment, AdminDomainName]
-        RootBucketName: !FindInMap [EnvironmentMap, !Ref Environment, AdminRootBucketName]
-        LogBucketName: !FindInMap [EnvironmentMap, !Ref Environment, AdminLogBucketName]
+        HostedZone: !Ref HostedZone
+        DomainName: !Ref AdminDomainName
+        RootBucketName: !Ref AdminRootBucketName
+        LogBucketName: !Ref AdminLogBucketName
         Environment: !Ref Environment
         Service: Admin
       TemplateURL: templates/static-site.template.yml
@@ -91,7 +91,7 @@ Resources:
   Certificate:
     Type: AWS::CertificateManager::Certificate
     Properties:
-      DomainName: !FindInMap [EnvironmentMap, !Ref Environment, ApiDomainName]
+      DomainName: !Ref ApiDomainName
       ValidationMethod: DNS
       Tags:
         - Key: Environment
@@ -101,11 +101,11 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       Domain:
-        DomainName: !FindInMap [EnvironmentMap, !Ref Environment, ApiDomainName]
+        DomainName: !Ref ApiDomainName
         CertificateArn: !Ref Certificate
         EndpointConfiguration: EDGE
         Route53:
-          HostedZoneName: !Join ["", [!FindInMap [EnvironmentMap, !Ref Environment, HostedZone], "."]]
+          HostedZoneName: !Join ["", [!Ref HostedZone, "."]]
           EvaluateTargetHealth: true
       StageName: !Sub ${Environment}
       Tags:
@@ -419,11 +419,11 @@ Outputs:
 ###############################################################################
 
   ApiUrl:
-    Value: !FindInMap [EnvironmentMap, !Ref Environment, ApiDomainName]
+    Value: !Ref ApiDomainName
     Description: Url for the api.
 
   FrontendUrl:
-    Value: !FindInMap [EnvironmentMap, !Ref Environment, FrontendDomainName]
+    Value: !Ref FrontendDomainName
     Description: Url for the web app.
   FrontendRootBucketName:
     Value: !GetAtt FrontendStack.Outputs.RootBucketName
@@ -433,7 +433,7 @@ Outputs:
     Description: Name of the S3 bucket that stores the logs for the web app.
 
   AdminUrl:
-    Value: !FindInMap [EnvironmentMap, !Ref Environment, AdminDomainName]
+    Value: !Ref AdminDomainName
     Description: Url for the web admin.
   AdminRootBucketName:
     Value: !GetAtt AdminStack.Outputs.RootBucketName

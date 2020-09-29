@@ -10,7 +10,8 @@
     "lint": "eslint . --ext .ts packages",
     "lint:fix": "npm run lint -- --fix",
     "dev": "lerna run dev & make sam-local",
-    "dev:kill": "pkill -f lerna"
+    "dev:kill": "pkill -f lerna",
+    "install-dependencies": "npm i && lerna run install-dependencies"
   },
   "repository": {
     "type": "git",

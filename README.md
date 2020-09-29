@@ -2,8 +2,9 @@
 Website for Red Comet Creations.
 
 ## Tech Stack
-- Next.js
 - Node.js
+- React
+- Next.js
 - Typescript
 - Lerna
 - ESLint
@@ -12,6 +13,8 @@ Website for Red Comet Creations.
   - API Gateway
   - Certificate Manager
   - CloudFront
+  - CodeBuild
+  - CodePipeline
   - Cognito
   - DynamoDB
   - DynamoDB Streams
@@ -40,9 +43,20 @@ Website for Red Comet Creations.
 - `npm run deploy` deploy to devlopment environment
 - `npm run deploy:prod` deploy to production
 
+## CICD
+- Be sure to edit the pipeline and click connect to GitHub to authorize AWS CodeSuite as an oAuth app in your repo
+
 ## Backlog
-- Create teardown script
+- House keeping
+  - Better "Get Started" sections in README
+  - Add lifecycle hooks to S3 buckets to remove old files
+  - Add better logging and alarms
+  - Clean up CloudFormation resource permissions
+- build scripts
+  - Create teardown scripts
 - CI/CD
+  - Move GitHub token to AWS Secrets Manager
+  - Add cache busting/cdn invalidations
 - API
   - authentication
   - quote service
