@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "build": "lerna run build && lerna run export",
-    "deploy": "sh deploy.sh",
+    "deploy": "make deploy",
     "lint": "eslint . --ext .ts packages",
-    "lint:fix": "eslint . --ext .ts packages --fix",
-    "dev": "lerna run dev & sh local.sh"
+    "lint:fix": "npm run lint -- --fix",
+    "dev": "lerna run dev & make sam-local",
+    "dev:kill": "pkill -f lerna"
   },
   "repository": {
     "type": "git",
