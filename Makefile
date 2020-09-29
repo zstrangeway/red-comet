@@ -1,11 +1,16 @@
 SHELL=/bin/bash
 
 STAGE ?= dev
-PROJECT:=red-comet-${STAGE}
+APP_NAME:=red-comet
+PROJECT:=${STAGE}-${APP_NAME}
 BUILD_DIR:=.build
 OUTPUT_FILE:=${BUILD_DIR}/output.yml
 TEMPLATE_FILE:=template.yml
-BUCKET:=${PROJECT}-deployment-files
+DEPLOYMENT_BUCKET:=${PROJECT}-deployment-files
+FRONT_END_BUCKET:=${PROJECT}-frontend
+ADMIN_BUCKET:=${PROJECT}-admin
+FRONT_END_LOG_BUCKET:=${FRONT_END_BUCKET}-logs
+ADMIN_LOG_BUCKET:=${ADMIN_BUCKET}-logs
 
 abc=deploy
 
@@ -20,6 +25,8 @@ sam-local:
 
 .PHONY: deploy
 deploy:
+	# Build and deploy application specify to dev, override STAGE=prod to deploy to prod
+
 	# Return error code 1 if value of STAGE is invalid
 	if [ ${STAGE} != "dev" ] && [ ${STAGE} != "prod" ]; then \
 		echo ${STAGE} is not a valid input for STAGE.; \
@@ -31,8 +38,8 @@ deploy:
 	mkdir ${BUILD_DIR}
 
 	# create the deployment bucket in S3 case it doesn't exist
-	aws s3 mb s3://${BUCKET}
-	aws s3api put-bucket-tagging --bucket ${BUCKET} --tagging "TagSet=[{Key=environment,Value=${STAGE}},{Key=service,Value=deployment}]"
+	aws s3 mb s3://${DEPLOYMENT_BUCKET}
+	aws s3api put-bucket-tagging --bucket ${DEPLOYMENT_BUCKET} --tagging "TagSet=[{Key=environment,Value=${STAGE}},{Key=service,Value=deployment}]"
 
 	# compile typescript packages
 	rm -rf ./dist
@@ -42,7 +49,7 @@ deploy:
 	sam package \
     --template-file ${TEMPLATE_FILE} \
     --output-template-file ${OUTPUT_FILE} \
-    --s3-bucket ${BUCKET}
+    --s3-bucket ${DEPLOYMENT_BUCKET}
 
 	# the deploy cloudformation and lambdas
 	sam deploy \
@@ -52,5 +59,27 @@ deploy:
     --parameter-overrides Environment=${STAGE}
 
 	# deploy web applications to S3
-	aws s3 sync ./dist/frontend s3://red-comet-webapp-${STAGE}
-	aws s3 sync ./dist/admin s3://red-comet-webadmin-${STAGE}
+	aws s3 sync ./dist/frontend s3://${FRONT_END_BUCKET}
+	aws s3 sync ./dist/admin s3://${ADMIN_BUCKET}
+
+.PHONY: teardown
+teardown:
+	# Teardown dev stack, override STAGE=prod to teardown prod
+	echo "not implemented"
+	# TODO
+	# Create snapshots
+	# Empty all S3 buckets
+	# Delete CloudFormation stack
+	# Delete deployment bucket
+
+.PHONY: deploy-pipline
+deploy_pipline:
+	# Deploy CI/CD pipline
+	echo "not implemented"
+	# TODO
+
+.PHONY: teardown_pipline
+teardown_pipline:
+	# Teardown CI/CD pipline
+	echo "not implemented"
+	# TODO

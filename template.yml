@@ -21,21 +21,21 @@ Mappings:
     prod: 
       HostedZone: redcometcrafts.com
       ApiDomainName: api.redcometcrafts.com
-      WebAppDomainName: redcometcrafts.com
-      WebAppRootBucketName: red-comet-webapp-prod
-      WebAppLogBucketName: red-comet-webapp-logs-prod
-      WebAdminDomainName: admin.redcometcrafts.com
-      WebAdminRootBucketName: red-comet-webadmin-prod
-      WebAdminLogBucketName: red-comet-webadmin-logs-prod
+      FrontendDomainName: redcometcrafts.com
+      FrontendRootBucketName: prod-red-comet-frontend
+      FrontendLogBucketName: prod-red-comet-frontend-logs
+      AdminDomainName: admin.redcometcrafts.com
+      AdminRootBucketName: prod-red-comet-admin
+      AdminLogBucketName: prod-red-comet-admin-logs
     dev: 
       HostedZone: redcometcrafts.com
       ApiDomainName: dev-api.redcometcrafts.com
-      WebAppDomainName: dev.redcometcrafts.com
-      WebAppRootBucketName: red-comet-webapp-dev
-      WebAppLogBucketName: red-comet-webapp-logs-dev
-      WebAdminDomainName: dev-admin.redcometcrafts.com
-      WebAdminRootBucketName: red-comet-webadmin-dev
-      WebAdminLogBucketName: red-comet-webadmin-logs-dev
+      FrontendDomainName: dev.redcometcrafts.com
+      FrontendRootBucketName: dev-red-comet-frontend
+      FrontendLogBucketName: dev-red-comet-frontend-logs
+      AdminDomainName: dev-admin.redcometcrafts.com
+      AdminRootBucketName: dev-red-comet-admin
+      AdminLogBucketName: dev-red-comet-admin-logs
 
 ###############################################################################
 Resources:
@@ -46,44 +46,44 @@ Resources:
 
 # TODO: Automate certificate validation
 # TODO: Review max and min TTL
-  WebAppStack:
+  FrontendStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
         HostedZone: !FindInMap [EnvironmentMap, !Ref Environment, HostedZone]
-        DomainName: !FindInMap [EnvironmentMap, !Ref Environment, WebAppDomainName]
-        RootBucketName: !FindInMap [EnvironmentMap, !Ref Environment, WebAppRootBucketName]
-        LogBucketName: !FindInMap [EnvironmentMap, !Ref Environment, WebAppLogBucketName]
+        DomainName: !FindInMap [EnvironmentMap, !Ref Environment, FrontendDomainName]
+        RootBucketName: !FindInMap [EnvironmentMap, !Ref Environment, FrontendRootBucketName]
+        LogBucketName: !FindInMap [EnvironmentMap, !Ref Environment, FrontendLogBucketName]
         Environment: !Ref Environment
-        Service: WebApp
+        Service: Frontend
       TemplateURL: templates/static-site.template.yml
       Tags:
         - Key: Environment
           Value: !Ref Environment
         - Key: Service
-          Value: WebApp
+          Value: Frontend
 
 # Admin
 ###############################################################################
 
 # TODO: Automate certificate validation
 # TODO: Review max and min TTL
-  WebAdminStack:
+  AdminStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       Parameters:
         HostedZone: !FindInMap [EnvironmentMap, !Ref Environment, HostedZone]
-        DomainName: !FindInMap [EnvironmentMap, !Ref Environment, WebAdminDomainName]
-        RootBucketName: !FindInMap [EnvironmentMap, !Ref Environment, WebAdminRootBucketName]
-        LogBucketName: !FindInMap [EnvironmentMap, !Ref Environment, WebAdminLogBucketName]
+        DomainName: !FindInMap [EnvironmentMap, !Ref Environment, AdminDomainName]
+        RootBucketName: !FindInMap [EnvironmentMap, !Ref Environment, AdminRootBucketName]
+        LogBucketName: !FindInMap [EnvironmentMap, !Ref Environment, AdminLogBucketName]
         Environment: !Ref Environment
-        Service: WebAdmin
+        Service: Admin
       TemplateURL: templates/static-site.template.yml
       Tags:
         - Key: Environment
           Value: !Ref Environment
         - Key: Service
-          Value: WebAdmin
+          Value: Admin
 
 # API
 ###############################################################################
@@ -115,7 +115,7 @@ Resources:
   SharedLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      LayerName: !Sub Common-Layer-${Environment}
+      LayerName: !Sub ${Environment}-Shared-Layer
       Description: Dependencies for Contact functions
       ContentUri: dist/layers/nodejs
       CompatibleRuntimes:
@@ -127,7 +127,7 @@ Resources:
   PostContactLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub PostContact-${Environment}
+      FunctionName: !Sub ${Environment}-PostContact
       Handler: index.post
       Runtime: nodejs12.x
       CodeUri: dist/contact 
@@ -138,7 +138,7 @@ Resources:
       Policies:
         - AWSLambdaBasicExecutionRole
         - DynamoDBCrudPolicy:
-            TableName: !Sub Contacts-${Environment}
+            TableName: !Sub ${Environment}-Contacts
       Events:
         MyEndpoint:
           Type: Api 
@@ -149,7 +149,7 @@ Resources:
               Ref: RedCometAPI
       Environment:
         Variables:
-          CONTACT_TABLE: !Sub Contacts-${Environment}
+          CONTACT_TABLE: !Sub ${Environment}-Contacts
       Tags:
         Environment: !Ref Environment
         Service: Contact
@@ -159,7 +159,7 @@ Resources:
     Type: AWS::Serverless::Function
     DependsOn: ContactsTable
     Properties:
-      FunctionName: !Sub GetContacts-${Environment}
+      FunctionName: !Sub ${Environment}-GetContacts
       Handler: index.get
       Runtime: nodejs12.x
       CodeUri: dist/contact
@@ -170,7 +170,7 @@ Resources:
       Policies:
         - AWSLambdaBasicExecutionRole
         - DynamoDBCrudPolicy:
-            TableName: !Sub Contacts-${Environment}
+            TableName: !Sub ${Environment}-Contacts
       Events:
         MyEndpoint:
           Type: Api 
@@ -181,7 +181,7 @@ Resources:
               Ref: RedCometAPI
       Environment:
         Variables:
-          CONTACT_TABLE: !Sub Contacts-${Environment}
+          CONTACT_TABLE: !Sub ${Environment}-Contacts
       Tags:
         Environment: !Ref Environment
         Service: Contact
@@ -190,7 +190,7 @@ Resources:
   GetContactByIdLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub GetContactById-${Environment}
+      FunctionName: !Sub ${Environment}-GetContactById
       Handler: index.getById
       Runtime: nodejs12.x
       CodeUri: dist/contact
@@ -211,7 +211,7 @@ Resources:
               Ref: RedCometAPI
       Environment:
         Variables:
-          CONTACT_TABLE: !Sub Contacts-${Environment}
+          CONTACT_TABLE: !Sub ${Environment}-Contacts
       Tags:
         Environment: !Ref Environment
         Service: Contact
@@ -219,7 +219,7 @@ Resources:
   SendContactEmailLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub SendContactEmail-${Environment}
+      FunctionName: !Sub ${Environment}-SendContactEmail
       Handler: index.sendEmail
       Runtime: nodejs12.x
       CodeUri: dist/contact
@@ -242,7 +242,7 @@ Resources:
   ContactsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Sub Contacts-${Environment}
+      TableName: !Sub ${Environment}-Contacts
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S
@@ -311,7 +311,7 @@ Resources:
   PostQuoteLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub PostQuote-${Environment}
+      FunctionName: !Sub ${Environment}-PostQuote
       Handler: index.post
       Runtime: nodejs12.x
       CodeUri: dist/quote
@@ -322,7 +322,7 @@ Resources:
       Policies:
         - AWSLambdaBasicExecutionRole
         - DynamoDBCrudPolicy:
-            TableName: !Sub Quotes-${Environment}
+            TableName: !Sub ${Environment}-Quotes
       Events:
         MyEndpoint:
           Type: Api 
@@ -333,7 +333,7 @@ Resources:
               Ref: RedCometAPI
       Environment:
         Variables:
-          QUOTE_TABLE: !Sub Quotes-${Environment}
+          QUOTE_TABLE: !Sub ${Environment}-Quotes
       Tags:
         Environment: !Ref Environment
         Service: Quotes
@@ -342,7 +342,7 @@ Resources:
   GetQuotesLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub GetQuotes-${Environment}
+      FunctionName: !Sub ${Environment}-GetQuotes
       Handler: index.get
       Runtime: nodejs12.x
       CodeUri: dist/quote
@@ -353,7 +353,7 @@ Resources:
       Policies:
         - AWSLambdaBasicExecutionRole
         - DynamoDBCrudPolicy:
-            TableName: !Sub Quotes-${Environment}
+            TableName: !Sub ${Environment}-Quotes
       Events:
         MyEndpoint:
           Type: Api 
@@ -364,7 +364,7 @@ Resources:
               Ref: RedCometAPI
       Environment:
         Variables:
-          QUOTES_TABLE: !Sub Quotes-${Environment}
+          QUOTES_TABLE: !Sub ${Environment}-Quotes
       Tags:
         Environment: !Ref Environment
         Service: Quotes
@@ -373,7 +373,7 @@ Resources:
   GetQuoteByIdLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub getQuoteById-${Environment}
+      FunctionName: !Sub ${Environment}-getQuoteById
       Handler: index.getById
       Runtime: nodejs12.x
       CodeUri: dist/quote
@@ -384,7 +384,7 @@ Resources:
       Policies:
         - AWSLambdaBasicExecutionRole
         - DynamoDBCrudPolicy:
-            TableName: !Sub Quotes-${Environment}
+            TableName: !Sub ${Environment}-Quote
       Events:
         MyEndpoint:
           Type: Api 
@@ -395,7 +395,7 @@ Resources:
               Ref: RedCometAPI
       Environment:
         Variables:
-          QUOTES_TABLE: !Sub Quotes-${Environment}
+          QUOTES_TABLE: !Sub ${Environment}-Quotes
       Tags:
         Environment: !Ref Environment
         Service: Quotes
@@ -403,7 +403,7 @@ Resources:
   QuotesTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
-      TableName: !Sub Quotes-${Environment}
+      TableName: !Sub ${Environment}-Quotes
       PrimaryKey:
         Name: id
         Type: String
@@ -422,22 +422,22 @@ Outputs:
     Value: !FindInMap [EnvironmentMap, !Ref Environment, ApiDomainName]
     Description: Url for the api.
 
-  WebAppUrl:
-    Value: !FindInMap [EnvironmentMap, !Ref Environment, WebAppDomainName]
+  FrontendUrl:
+    Value: !FindInMap [EnvironmentMap, !Ref Environment, FrontendDomainName]
     Description: Url for the web app.
-  WebAppRootBucketName:
-    Value: !GetAtt WebAppStack.Outputs.RootBucketName
+  FrontendRootBucketName:
+    Value: !GetAtt FrontendStack.Outputs.RootBucketName
     Description: Name of the S3 bucket that hosts the static site for the web app.
-  WebAppLogBucketName:
-    Value: !GetAtt WebAppStack.Outputs.LogBucketName
+  FrontendLogBucketName:
+    Value: !GetAtt FrontendStack.Outputs.LogBucketName
     Description: Name of the S3 bucket that stores the logs for the web app.
 
-  WebAdminUrl:
-    Value: !FindInMap [EnvironmentMap, !Ref Environment, WebAdminDomainName]
+  AdminUrl:
+    Value: !FindInMap [EnvironmentMap, !Ref Environment, AdminDomainName]
     Description: Url for the web admin.
-  WebAdminRootBucketName:
-    Value: !GetAtt WebAdminStack.Outputs.RootBucketName
+  AdminRootBucketName:
+    Value: !GetAtt AdminStack.Outputs.RootBucketName
     Description: Name of the S3 bucket that hosts the static site for the web admin.
-  WebAdminLogBucketName:
-    Value: !GetAtt WebAdminStack.Outputs.LogBucketName
+  AdminLogBucketName:
+    Value: !GetAtt AdminStack.Outputs.LogBucketName
     Description: Name of the S3 bucket that stores the logs for the web admin.

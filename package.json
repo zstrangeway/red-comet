@@ -6,6 +6,7 @@
   "scripts": {
     "build": "lerna run build && lerna run export",
     "deploy": "make deploy",
+    "deploy:prod": "make deploy STAGE=prod",
     "lint": "eslint . --ext .ts packages",
     "lint:fix": "npm run lint -- --fix",
     "dev": "lerna run dev & make sam-local",
