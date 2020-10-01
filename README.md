@@ -52,6 +52,10 @@ Website for Red Comet Creations.
   - Add lifecycle hooks to S3 buckets to remove old files
   - Add better logging and alarms
   - Clean up CloudFormation resource permissions
+  - Split out serverless api cfn into its own template file.
+  - local AWS services?
+    - DynamoDB
+    - SES
 - build scripts
   - Create teardown scripts
 - CI/CD
@@ -62,9 +66,16 @@ Website for Red Comet Creations.
   - quote service
   - gallery service
 - Frontend
-  - Automate sitemap, robots.txt & human.txt generation?
-  - Add Google Analytics
-    - Analyze performance
+  - SEO
+    - Optimize scores on:
+      - Google Pagespeed
+      - Google Lightspeed
+    - Static content caching
+    - image optimization
+    - Automate sitemap, robots.txt & human.txt generation?
+      - Possible solutions: https://leerob.io/blog/nextjs-sitemap-robots
+    - Add Google Analytics
+      - Analyze performance
   - Home
   - About
   - Services
