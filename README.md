@@ -62,6 +62,9 @@ Website for Red Comet Creations.
   - quote service
   - gallery service
 - Frontend
+  - Automate sitemap, robots.txt & human.txt generation?
+  - Add Google Analytics
+    - Analyze performance
   - Home
   - About
   - Services

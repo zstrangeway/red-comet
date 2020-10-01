@@ -1,0 +1,26 @@
+
+____    ____  ______    __    __          _______. __    __       ___       __       __      
+\   \  /   / /  __  \  |  |  |  |        /       ||  |  |  |     /   \     |  |     |  |     
+ \   \/   / |  |  |  | |  |  |  |       |   (----`|  |__|  |    /  ^  \    |  |     |  |     
+  \_    _/  |  |  |  | |  |  |  |        \   \    |   __   |   /  /_\  \   |  |     |  |     
+    |  |    |  `--'  | |  `--'  |    .----)   |   |  |  |  |  /  _____  \  |  `----.|  `----.
+    |__|     \______/   \______/     |_______/    |__|  |__| /__/     \__\ |_______||_______|
+
+.__   __.   ______   .___________.   .______      ___           _______.     _______. __   __ 
+|  \ |  |  /  __  \  |           |   |   _  \    /   \         /       |    /       ||  | |  |
+|   \|  | |  |  |  | `---|  |----`   |  |_)  |  /  ^  \       |   (----`   |   (----`|  | |  |
+|  . `  | |  |  |  |     |  |        |   ___/  /  /_\  \       \   \        \   \    |  | |  |
+|  |\   | |  `--'  |     |  |        |  |     /  _____  \  .----)   |   .----)   |   |__| |__|
+|__| \__|  \______/      |__|        | _|    /__/     \__\ |_______/    |_______/    (__) (__)
+                                                                                                                               
+
+Nothing to see here... This is the admin site for red comet solutions.
+Feel free to check out the main site.
+
+This site was crated by Zac Strangeway.
+Check out his site!
+https://zac.strangeway.com
+
+
+If you want to know about how this site was created, check out the Git repo!
+https://github.com/zstrangeway/red-comet
